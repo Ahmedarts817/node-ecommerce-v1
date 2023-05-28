@@ -2,8 +2,8 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 const dotenv = require("dotenv");
-const ApiError = require('./utils/errorApi')
-const globalError = require('./middlewares/globalError')
+const ApiError = require("./utils/errorApi");
+const globalError = require("./middlewares/globalError");
 const morgan = require("morgan");
 require("./databse");
 const categoryRouter = require("./routers/categoryRouter");
@@ -21,26 +21,26 @@ app.get("/", (req, res) => {
 
 // Mount Routers
 app.use("/api/v1/categories", categoryRouter);
-app.all('*',(req,res,next)=>{
+app.all("*", (req, res, next) => {
   //create error and sent it to error handling midleware
   // const err = new Error(`cant find this route ${req.originalUrl}`)
   // next(err.message)
-  next(new ApiError("message",400))
-})
+  next(new ApiError("message", 400));
+});
 //Global Error Handling Middleware
-app.use(globalError)
-
+app.use(globalError);
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT || 8000, () => {
   console.log("listining");
 });
 // Handle rejections out express
-process.on('unhandledRejection',(err)=>{
+process.on("unhandledRejection", (err) => {
   console.error(`unhandledRejection Errors: ${err.name} | ${err.message}`);
-server.close(()=>{
-  console.error(`app is shut down ....`);
-  process.exit(1)
-})
-})
+  server.close(() => {
+    console.error(`app is shut down ....`);
+    process.exit(1);
+  });
+});
 
+//kkkk
