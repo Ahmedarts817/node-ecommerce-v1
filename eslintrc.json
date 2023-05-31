@@ -4,5 +4,18 @@
 
   "rules": {
     // "prettier": "prettier Errors",
+    "spaced-comment": "off",
+    "no-console": "off",
+    "consistent-return": "off",
+    "func-names": "off",
+    "object=shorthand": "off",
+    "no-process-exit": "off",
+    "no-param-reassign": "off",
+    "no-return-await": "off",
+    "n0-underscore-dangle": "off",
+    "class-method-use-this": "off",
+    "no-undef": "warn",
+    "prefer-destructuring": ["error", { "object": true, "array": false }],
+    "no-unused-vars": ["warn", { "argIgnorePattern": "req|res|next|val" }]
   }
 }

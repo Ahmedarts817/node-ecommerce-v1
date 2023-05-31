@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const subCategoryRouter = require("./subCategoryRouter");
 const {
   getCategoryValidator,
   createCategoryValidator,
@@ -23,4 +24,7 @@ router
   .get(getCategoryValidator, getCategory)
   .put(updateCategoryValidator, editCategory)
   .delete(deleteCategoryValidator, deleteCategory);
+
+router.use("/:categoryId/subcategories", subCategoryRouter);
+
 module.exports = router;
