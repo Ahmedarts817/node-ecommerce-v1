@@ -8,6 +8,7 @@ exports.setCategoryIdToBody = (req, res, next) => {
   if (!req.body.category) {
     req.body.category = req.params.categoryId;
   }
+  next();
 };
 //@desc create subcategories
 //@route /api/v1/subcategories
@@ -21,7 +22,16 @@ exports.createSubCategory = asyncHandler(async (req, res) => {
   });
   res.status(201).json({ data: subCategory });
 });
-
+//Nested Route
+//get sub Categories of one category middleware
+exports.createFilterObj = (req, res, next) => {
+  let filterObject = {};
+  if (req.params.categoryId) {
+    filterObject = { category: req.params.categoryId };
+  }
+  req.filterObject = filterObject;
+  next();
+};
 //@desc get subcategories
 //@route /api/v1/subcategories
 //@access public
@@ -29,11 +39,8 @@ exports.getSubCategories = asyncHandler(async (req, res) => {
   const page = req.query.page || 1;
   const limit = req.query.limit || 5;
   const skip = (page - 1) * limit;
-  let filterObject = {};
-  if (req.params.categoryId) {
-    filterObject = { category: req.params.categoryId };
-  }
-  const subcategories = await SubCategory.find(filterObject)
+
+  const subcategories = await SubCategory.find(req.filterObject)
     .skip(skip)
     .limit(limit)
     .populate({ path: "category", select: "name -_id" });
