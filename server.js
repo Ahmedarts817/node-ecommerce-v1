@@ -8,7 +8,6 @@ const morgan = require("morgan");
 require("./databse");
 const categoryRouter = require("./routers/categoryRouter");
 const subCategoryRouter = require("./routers/subCategoryRouter");
-const brandRouter = require("./routers/brandRouter");
 
 dotenv.config({ paath: ".env" });
 
@@ -24,7 +23,6 @@ app.get("/", (req, res) => {
 // Mount Routers
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/subcategories", subCategoryRouter);
-app.use("/api/v1/brands", brandRouter);
 
 app.all("*", (req, res, next) => {
   //create error and sent it to error handling midleware
