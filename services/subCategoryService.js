@@ -1,7 +1,7 @@
 const slugify = require("slugify");
 const asyncHandler = require("express-async-handler");
 const ApiError = require("../utils/errorApi");
-const SubCategory = require("../models/subcategoryModel");
+const SubCategory = require("../models/subCategoryModel");
 const { selectFields } = require("express-validator/src/select-fields");
 // set category id to body middleware
 exports.setCategoryIdToBody = (req, res, next) => {
