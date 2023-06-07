@@ -5,9 +5,12 @@ const dotenv = require("dotenv");
 const ApiError = require("./utils/errorApi");
 const globalError = require("./middlewares/globalError");
 const morgan = require("morgan");
-require("./databse");
+const dbConnection = require("./config/database");
+dbConnection();
 const categoryRouter = require("./routers/categoryRouter");
 const subCategoryRouter = require("./routers/subCategoryRouter");
+const brandRouter = require("./routers/brandRouter");
+const productRouter = require("./routers/productRouter");
 
 dotenv.config({ paath: ".env" });
 
@@ -23,6 +26,8 @@ app.get("/", (req, res) => {
 // Mount Routers
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/subcategories", subCategoryRouter);
+app.use("/api/v1/brands", brandRouter);
+app.use("/api/v1/products", productRouter);
 
 app.all("*", (req, res, next) => {
   //create error and sent it to error handling midleware
