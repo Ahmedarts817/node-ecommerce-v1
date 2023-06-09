@@ -7,10 +7,22 @@ const Product = require("../models/productModel");
 //@route /api/v1/products
 //@access public
 exports.getProducts = asyncHandler(async (req, res) => {
+  //1) filteration
+  const querystringObj = { ...req.query };
+  const execludeFields = ["page", "sort", "limit", "fields"];
+  execludeFields.forEach((field) => delete querystringObj[field]);
+
+  //2) pagination
   const page = req.query.page || 1;
   const limit = req.query.limit || 5;
   const skip = (page - 1) * limit;
-  const products = await Product.find().skip(skip).limit(limit);
+  //3)build query
+  const mongooseQuery = Product.find(querystringObj)
+    .skip(skip)
+    .limit(limit)
+    .populate({ path: "category", select: "name -_id" });
+  //4) execute query
+  const products = await mongooseQuery;
   res.status(201).json({ results: products.length, page, data: products });
 });
 
