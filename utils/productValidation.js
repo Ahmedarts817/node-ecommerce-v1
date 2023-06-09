@@ -60,12 +60,45 @@ exports.createProductValidator = [
     .notEmpty()
     .withMessage("Product must be belong to a category")
     .isMongoId()
-    .withMessage("Invalid ID formate"),
-
+    .withMessage("Invalid ID formate")
+    .custom((CategoryId) =>
+      Category.findById(CategoryId).then((category) => {
+        if (!category) {
+          return Promise.reject(
+            new Error(`no category for this id : ${CategoryId}`)
+          );
+        }
+      })
+    ),
   check("subcategories")
     .optional()
     .isMongoId()
-    .withMessage("Invalid ID formate"),
+    .withMessage("Invalid ID formate")
+    .custom((subcategoriesIds) =>
+      SubCategory.find({ _id: { $exists: true, $in: subcategoriesIds } }).then(
+        (result) => {
+          if (result.lenght < 1 || result.length != subcategoriesIds.length) {
+            return Promise.reject(new Error("invalid subcategories id"));
+          }
+        }
+      )
+    )
+    .custom((val, { req }) =>
+      SubCategory.find({ category: req.body.category }).then(
+        (subcategories) => {
+          const subcategoriesInDb = [];
+          subcategories.forEach((subcategory) => {
+            subcategoriesInDb.push(subcategory._id.toString());
+          });
+          const checker = (target, arr) => target.every((v) => arr.includes(v));
+          if (!checker(val, subcategoriesInDb)) {
+            return Promise.reject(
+              new Error("subcategories not belong to category")
+            );
+          }
+        }
+      )
+    ),
   check("brand").optional().isMongoId().withMessage("Invalid ID formate"),
   check("ratingsAverage")
     .optional()
